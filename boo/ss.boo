@@ -1,16 +1,13 @@
 import System
 import System.IO
+import System.Linq.Enumerable
 
 path = argv[0]
-dir = string.Empty
 files = DirectoryInfo(path).GetFiles("*.cs", SearchOption.AllDirectories)
-Array.Reverse(files)
-for fi in files :
-  localDir = fi.DirectoryName
-  if localDir != dir :
-    print string("-".ToCharArray()[0], 79)
-    dir = localDir
-    print dir
-  
-  print fi.Name + ":"
-  print /[^{};]/.Replace(File.ReadAllText(fi.FullName), string.Empty)  
+sortedFiles = files.GroupBy({fi | fi.Directory.FullName}).OrderBy({gf | gf.Key})
+for g in sortedFiles :
+  print string("-".ToCharArray()[0], 79)
+  print g.Key
+  for f in g :
+    print f.Name + ":"
+    print /[^{};]/.Replace(File.ReadAllText(f.FullName), string.Empty)
