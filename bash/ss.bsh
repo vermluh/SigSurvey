@@ -1,0 +1,18 @@
+#!/bin/bash
+dir=""
+for i in $(find . -type f -name "*.cs"); do 
+	localDir=$(dirname $i)
+	if test "$localDir" != "$dir"; then 
+		x=0
+		while [ $x -lt 79 ]; do
+			echo -n '-'; 
+			let x=$x+1; 
+		done; 
+		echo
+		dir="$localDir";
+		echo "$dir";
+	fi
+	echo -n "$(basename $i): "; 
+	sed 's/[^{};]//g' $i | tr -d '\n'
+	echo
+done
